@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#111827">
+  <meta name="description" content="GoalFlow: goals, habits, tasks and reflections in one simple productivity app.">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <title>GoalFlow — Personal Productivity</title>
+  <style>
+    :root{--bg:#0b1020;--panel:#141b2f;--panel2:#1a2340;--text:#f4f6ff;--muted:#a6b0ca;--accent:#a78bfa;--accent2:#67e8f9;--good:#86efac;--danger:#fda4af;--line:#2b3553}
+    *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 90% -10%,#28235a 0,transparent 35%),var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    button,input,select,textarea{font:inherit} button{cursor:pointer} .app{max-width:760px;margin:auto;min-height:100dvh;padding:18px 16px 100px}
+    header{display:flex;justify-content:space-between;align-items:center;margin:5px 0 22px}.brand{display:flex;gap:10px;align-items:center}.logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#111827;font-weight:900;font-size:20px}
+    h1{font-size:21px;margin:0;letter-spacing:-.5px} .sub{color:var(--muted);font-size:12px}.avatar{width:40px;height:40px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:var(--panel);font-weight:700}
+    .greeting{margin-bottom:18px}.greeting h2{font-size:25px;margin:0 0 5px;letter-spacing:-.7px}.greeting p{margin:0;color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat,.card{background:linear-gradient(160deg,rgba(26,35,64,.96),rgba(20,27,47,.96));border:1px solid var(--line);border-radius:20px;padding:15px}.stat strong{display:block;font-size:24px;margin:5px 0}.stat span{color:var(--muted);font-size:11px}
+    .section-head{display:flex;justify-content:space-between;align-items:center;margin:24px 2px 12px}.section-head h3{margin:0;font-size:17px}.link{border:0;background:none;color:var(--accent2);padding:5px}
+    .progress{height:8px;background:#29324d;border-radius:99px;overflow:hidden;margin:12px 0 4px}.progress span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:99px;transition:width .2s}
+    .task,.habit,.goal{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid var(--line)} .task:last-child,.habit:last-child,.goal:last-child{border-bottom:0}
+    .check{appearance:none;width:23px;height:23px;flex:0 0 23px;border:1.5px solid #677392;border-radius:8px;background:transparent;display:grid;place-items:center}.check:checked{background:var(--accent);border-color:var(--accent)}.check:checked:after{content:"✓";font-weight:900;color:#101323}
+    .item-main{flex:1;min-width:0}.item-title{font-weight:650;overflow-wrap:anywhere}.done .item-title{text-decoration:line-through;color:var(--muted)}.item-meta{font-size:12px;color:var(--muted);margin-top:3px}.pill{font-size:11px;padding:5px 8px;border-radius:999px;background:#29264e;color:#d8ccff;white-space:nowrap}
+    .btn{border:0;border-radius:13px;padding:11px 14px;background:linear-gradient(135deg,var(--accent),#8b9cff);color:#111827;font-weight:750}.btn.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--line)}.btn.small{padding:7px 10px;font-size:12px}.full{width:100%}
+    .nav{position:fixed;bottom:0;left:0;right:0;z-index:10;background:rgba(11,16,32,.92);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px max(12px,calc((100vw - 760px)/2)) calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:space-around}
+    .nav button{background:none;border:0;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 10px;min-width:58px}.nav button b{font-size:19px;font-weight:500}.nav button.active{color:var(--accent2)}
+    .view{display:none}.view.active{display:block}.empty{padding:20px;text-align:center;color:var(--muted)}.formrow{display:flex;gap:8px;margin:10px 0}.field{width:100%;background:#0e1528;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:12px;outline:none}.field:focus{border-color:var(--accent)}textarea.field{min-height:95px;resize:vertical}.stack{display:grid;gap:10px}.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}.muted{color:var(--muted)}.big-number{font-size:30px;font-weight:800;letter-spacing:-1px}.mini-levels{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.level{border:1px solid var(--line);background:#10172b;color:var(--muted);border-radius:9px;padding:6px 8px;font-size:11px}.level.selected{border-color:var(--accent);color:var(--text);background:#30295a}
+    .toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:#d1fae5;color:#064e3b;padding:10px 15px;border-radius:12px;z-index:30;display:none;box-shadow:0 8px 30px #0005;font-weight:650}.date{font-size:12px;color:var(--muted)}.quote{border-left:3px solid var(--accent);padding:10px 13px;color:#d8dcf2;background:#171c35;border-radius:0 12px 12px 0;margin:14px 0}
+    @media(min-width:600px){.app{padding:28px 24px 105px}.stats{gap:14px}.stat{padding:18px}.greeting h2{font-size:30px}}
+  </style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="app">
+  <header><div class="brand"><div class="logo">G</div><div><h1>GoalFlow</h1><div class="sub">Your goals, one day at a time</div></div></div><div class="avatar" id="avatar">A</div></header>
+
+  <main>
+    <section class="view active" id="home">
+      <div class="greeting"><div class="date" id="todayDate"></div><h2>Make today count ✨</h2><p>Small steps. Real progress. No perfection required.</p></div>
+      <div class="stats">
+        <div class="stat"><span>DAILY PROGRESS</span><strong id="progressNum">0%</strong><span>tasks complete</span></div>
+        <div class="stat"><span>ACTIVE HABITS</span><strong id="habitNum">0</strong><span>to build steadily</span></div>
+        <div class="stat"><span>ACTIVE GOALS</span><strong id="goalNum">0</strong><span>in your plan</span></div>
+      </div>
+      <div class="card"><div class="section-head" style="margin:0"><h3>Today's focus</h3><span class="pill" id="taskCount">0 tasks</span></div><div class="progress"><span id="progressBar" style="width:0%"></span></div><div id="homeTasks"></div><button class="btn secondary full" style="margin-top:10px" onclick="showView('tasks')">Open task planner →</button></div>
+      <div class="section-head"><h3>Habit check-in</h3><button class="link" onclick="showView('habits')">Manage</button></div><div class="card" id="homeHabits"></div>
+      <div class="quote">“You don't need a perfect day. You need a next step.”</div>
+      <div class="section-head"><h3>Quick actions</h3></div><div class="two"><button class="btn" onclick="quickTask()">＋ Add task</button><button class="btn secondary" onclick="quickHabit()">＋ Add habit</button></div>
+    </section>
+
+    <section class="view" id="goals">
+      <div class="greeting"><h2>Your goals 🎯</h2><p>Turn big ambitions into clear next steps.</p></div>
+      <div class="card"><h3 style="margin-top:0">Create a goal</h3><form id="goalForm" class="stack"><input class="field" id="goalTitle" placeholder="e.g. Learn Python confidently" required><div class="two"><select class="field" id="goalPeriod"><option>Monthly</option><option>Weekly</option><option>Yearly</option></select><input class="field" id="goalDeadline" type="date"></div><button class="btn">Save goal</button></form></div>
+      <div class="section-head"><h3>Goal roadmap</h3><span class="pill" id="goalTotal">0 goals</span></div><div class="card" id="goalList"></div>
+      <div class="section-head"><h3>Idea parking lot 💡</h3></div><div class="card"><form id="ideaForm" class="formrow"><input class="field" id="ideaInput" placeholder="Save a project or random idea"><button class="btn">Save</button></form><div id="ideaList"></div></div>
+    </section>
+
+    <section class="view" id="tasks">
+      <div class="greeting"><h2>Daily planner ☀️</h2><p>Pick one important task, then keep moving.</p></div>
+      <div class="card"><h3 style="margin-top:0">Add a task</h3><form id="taskForm" class="stack"><input class="field" id="taskTitle" placeholder="What needs to get done?" required><div class="two"><select class="field" id="taskPriority"><option value="Top priority">Top priority</option><option value="Important">Important</option><option value="Optional">Optional</option></select><input class="field" id="taskDue" type="date"></div><button class="btn">Add to today's list</button></form></div>
+      <div class="section-head"><h3>My tasks</h3><button class="link" onclick="clearCompleted()">Clear completed</button></div><div class="card" id="taskList"></div>
+    </section>
+
+    <section class="view" id="habits">
+      <div class="greeting"><h2>Build your habits 🌱</h2><p>Choose a level that fits your energy today.</p></div>
+      <div class="card"><h3 style="margin-top:0">Create a flexible habit</h3><form id="habitForm" class="stack"><input class="field" id="habitTitle" placeholder="e.g. Practice coding" required><div class="two"><input class="field" id="miniLevel" placeholder="Mini version (5 mins)" required><input class="field" id="plusLevel" placeholder="Plus version (20 mins)" required></div><input class="field" id="eliteLevel" placeholder="Elite version (45 mins)" required><button class="btn">Create habit</button></form></div>
+      <div class="section-head"><h3>Today's habit check-in</h3><span class="pill">No zero-day pressure</span></div><div class="card" id="habitList"></div>
+    </section>
+
+    <section class="view" id="track">
+      <div class="greeting"><h2>Wellbeing & review 💜</h2><p>Notice patterns, not perfection.</p></div>
+      <div class="card"><h3 style="margin-top:0">Daily check-in</h3><form id="trackForm" class="stack"><div class="two"><label class="muted">Sleep (hours)<input class="field" id="sleep" type="number" min="0" max="24" step=".5" placeholder="8"></label><label class="muted">Water (glasses)<input class="field" id="water" type="number" min="0" max="30" placeholder="6"></label></div><div class="two"><label class="muted">Mood<select class="field" id="mood"><option>🙂 Good</option><option>😐 Okay</option><option>😔 Low</option><option>😄 Great</option><option>😣 Stressed</option></select></label><label class="muted">Movement (minutes)<input class="field" id="movement" type="number" min="0" max="600" placeholder="20"></label></div><label class="muted">Daily reflection<textarea class="field" id="reflection" placeholder="What went well? What can I try tomorrow?"></textarea></label><button class="btn">Save check-in</button></form></div>
+      <div class="section-head"><h3>Monthly review</h3></div><div class="card"><p class="muted">Rate this month from 1–5 and reflect on what matters.</p><form id="reviewForm" class="stack"><div class="two"><label class="muted">Learning <select class="field" id="learnRate"><option>3</option><option>1</option><option>2</option><option>4</option><option>5</option></select></label><label class="muted">Wellbeing <select class="field" id="wellRate"><option>3</option><option>1</option><option>2</option><option>4</option><option>5</option></select></label></div><textarea class="field" id="reviewText" placeholder="What progress are you proud of? What will you change next month?"></textarea><button class="btn">Save monthly review</button></form></div>
+      <div class="section-head"><h3>Your saved check-ins</h3></div><div class="card" id="history"></div>
+      <button class="btn secondary full" style="margin-top:14px" onclick="exportData()">Export my data (JSON)</button>
+    </section>
+  </main>
+</div>
+<nav class="nav">
+  <button class="active" data-view="home" onclick="showView('home')"><b>⌂</b>Home</button>
+  <button data-view="goals" onclick="showView('goals')"><b>◎</b>Goals</button>
+  <button data-view="tasks" onclick="showView('tasks')"><b>☑</b>Tasks</button>
+  <button data-view="habits" onclick="showView('habits')"><b>↗</b>Habits</button>
+  <button data-view="track" onclick="showView('track')"><b>♡</b>Review</button>
+</nav>
+<script>
+const KEY='goalflow-data-v1';
+const today=()=>new Date().toISOString().slice(0,10);
+const dateLabel=()=>new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric',year:'numeric'});
+let data={tasks:[],goals:[],habits:[],ideas:[],checkins:[],reviews:[]};
+try{data={...data,...JSON.parse(localStorage.getItem(KEY)||'{}')}}catch(e){}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function toast(msg){let t=document.getElementById('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',1900)}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));window.scrollTo({top:0,behavior:'smooth'});render()}
+function completedToday(){return data.tasks.filter(t=>t.done&&t.day===today()).length}
+function tasksToday(){return data.tasks.filter(t=>t.day===today())}
+function render(){
+ document.getElementById('todayDate').textContent=dateLabel();
+ document.getElementById('avatar').textContent=(localStorage.getItem('goalflow-name')||'A').slice(0,1).toUpperCase();
+ let ts=tasksToday(),done=ts.filter(t=>t.done).length,pct=ts.length?Math.round(done/ts.length*100):0;
+ document.getElementById('progressNum').textContent=pct+'%';document.getElementById('progressBar').style.width=pct+'%';document.getElementById('taskCount').textContent=`${done}/${ts.length} tasks`;
+ document.getElementById('habitNum').textContent=data.habits.length;document.getElementById('goalNum').textContent=data.goals.filter(g=>!g.done).length;
+ document.getElementById('homeTasks').innerHTML=ts.length?ts.slice(0,4).map(taskHTML).join(''):'<div class="empty">Your day is open. Add one small task to get started.</div>';
+ document.getElementById('homeHabits').innerHTML=data.habits.length?data.habits.slice(0,3).map(habitHTML).join(''):'<div class="empty">Add one habit you want to practice.</div>';
+ document.getElementById('taskList').innerHTML=data.tasks.length?data.tasks.slice().sort((a,b)=>(a.done-b.done)).map(taskHTML).join(''):'<div class="empty">No tasks yet. Add your first task above.</div>';
+ document.getElementById('goalTotal').textContent=data.goals.length+' goals';
+ document.getElementById('goalList').innerHTML=data.goals.length?data.goals.map((g,i)=>`<div class="goal ${g.done?'done':''}"><input class="check" type="checkbox" ${g.done?'checked':''} onchange="toggleGoal(${i})"><div class="item-main"><div class="item-title">${esc(g.title)}</div><div class="item-meta">${esc(g.period)} goal${g.deadline?' · Due '+esc(g.deadline):''}</div></div><button class="link" onclick="removeItem('goals',${i})">×</button></div>`).join(''):'<div class="empty">Your goals will show up here.</div>';
+ document.getElementById('habitList').innerHTML=data.habits.length?data.habits.map(habitHTML).join(''):'<div class="empty">Start small. Add a flexible habit above.</div>';
+ document.getElementById('ideaList').innerHTML=data.ideas.length?data.ideas.map((x,i)=>`<div class="task"><div class="item-main">${esc(x)}</div><button class="link" onclick="removeItem('ideas',${i})">×</button></div>`).join(''):'<div class="muted">Your saved ideas will appear here.</div>';
+ document.getElementById('history').innerHTML=data.checkins.length?data.checkins.slice(-5).reverse().map(c=>`<div class="task"><div class="item-main"><div class="item-title">${esc(c.date)} · ${esc(c.mood)}</div><div class="item-meta">Sleep: ${esc(c.sleep||'—')}h · Water: ${esc(c.water||'—')} glasses · Movement: ${esc(c.movement||'—')} min${c.reflection?' · '+esc(c.reflection):''}</div></div></div>`).join(''):'<div class="empty">Saved daily check-ins will appear here.</div>';
+}
+function taskHTML(t){let i=data.tasks.indexOf(t);return `<div class="task ${t.done?'done':''}"><input class="check" type="checkbox" ${t.done?'checked':''} onchange="toggleTask(${i})"><div class="item-main"><div class="item-title">${esc(t.title)}</div><div class="item-meta">${esc(t.priority)}${t.due?' · Due '+esc(t.due):''}</div></div><button class="link" onclick="removeItem('tasks',${i})">×</button></div>`}
+function habitHTML(h){let i=data.habits.indexOf(h),entry=h.logs?.[today()],level=entry?.level;return `<div class="habit"><div class="item-main"><div class="item-title">${esc(h.title)}</div><div class="item-meta">${entry?'Today: '+esc(level):'Pick a level that feels realistic today'}</div><div class="mini-levels">${[['Mini',h.mini],['Plus',h.plus],['Elite',h.elite]].map(([n,v])=>`<button class="level ${level===n?'selected':''}" onclick="logHabit(${i},'${n}')">${n}: ${esc(v)}</button>`).join('')}</div></div><button class="link" onclick="removeItem('habits',${i})">×</button></div>`}
+document.getElementById('taskForm').addEventListener('submit',e=>{e.preventDefault();data.tasks.unshift({title:document.getElementById('taskTitle').value.trim(),priority:document.getElementById('taskPriority').value,due:document.getElementById('taskDue').value,day:today(),done:false});e.target.reset();save();toast('Task added')});
+document.getElementById('goalForm').addEventListener('submit',e=>{e.preventDefault();data.goals.unshift({title:document.getElementById('goalTitle').value.trim(),period:document.getElementById('goalPeriod').value,deadline:document.getElementById('goalDeadline').value,done:false});e.target.reset();save();toast('Goal saved')});
+document.getElementById('habitForm').addEventListener('submit',e=>{e.preventDefault();data.habits.push({title:document.getElementById('habitTitle').value.trim(),mini:document.getElementById('miniLevel').value.trim(),plus:document.getElementById('plusLevel').value.trim(),elite:document.getElementById('eliteLevel').value.trim(),logs:{}});e.target.reset();save();toast('Habit created')});
+document.getElementById('ideaForm').addEventListener('submit',e=>{e.preventDefault();let v=document.getElementById('ideaInput').value.trim();if(v)data.ideas.unshift(v);e.target.reset();save();toast('Idea saved')});
+document.getElementById('trackForm').addEventListener('submit',e=>{e.preventDefault();data.checkins=data.checkins.filter(c=>c.date!==today());data.checkins.push({date:today(),sleep:document.getElementById('sleep').value,water:document.getElementById('water').value,mood:document.getElementById('mood').value,movement:document.getElementById('movement').value,reflection:document.getElementById('reflection').value});save();toast('Check-in saved')});
+document.getElementById('reviewForm').addEventListener('submit',e=>{e.preventDefault();data.reviews.unshift({date:today(),learning:document.getElementById('learnRate').value,wellbeing:document.getElementById('wellRate').value,text:document.getElementById('reviewText').value});save();toast('Monthly review saved')});
+function toggleTask(i){data.tasks[i].done=!data.tasks[i].done;save()}
+function toggleGoal(i){data.goals[i].done=!data.goals[i].done;save()}
+function logHabit(i,level){data.habits[i].logs=data.habits[i].logs||{};data.habits[i].logs[today()]={level};save();toast(level+' habit logged')}
+function removeItem(type,i){if(confirm('Remove this item?')){data[type].splice(i,1);save()}}
+function clearCompleted(){data.tasks=data.tasks.filter(t=>!t.done);save();toast('Completed tasks cleared')}
+function quickTask(){showView('tasks');document.getElementById('taskTitle').focus()}
+function quickHabit(){showView('habits');document.getElementById('habitTitle').focus()}
+function exportData(){let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='goalflow-backup.json';a.click();URL.revokeObjectURL(url)}
+render();
+if('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>

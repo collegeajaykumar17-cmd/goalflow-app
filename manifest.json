@@ -1,0 +1,10 @@
+{
+  "name": "GoalFlow Personal Productivity",
+  "short_name": "GoalFlow",
+  "description": "Goals, habits, tasks and daily reflection in one place.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0b1020",
+  "theme_color": "#111827",
+  "icons": [{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+}
